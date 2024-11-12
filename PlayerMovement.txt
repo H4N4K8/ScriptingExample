@@ -1,0 +1,42 @@
+using UnityEngine;
+
+public class PlayerMovement : MonoBehaviour
+{
+    public LayerMask groundLayer;  // Declare a LayerMask field
+    private Collider2D playerCollider;
+    public float moveSpeed = 5f;
+    public float jumpForce = 10f;
+    private Rigidbody2D rb;
+    private bool isGrounded;
+
+    void Start()
+    {
+        groundLayer = LayerMask.GetMask("Ground");
+        playerCollider = GetComponent<Collider2D>(); // Get the player's collider
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    void Update()
+    {
+        MovePlayer();
+        Jump();
+    }
+
+    void MovePlayer()
+    {
+        float horizontalInput = Input.GetAxis("Horizontal");
+        rb.linearVelocity = new Vector2(horizontalInput * moveSpeed, rb.linearVelocity.y);
+    }
+
+    void Jump()
+    {
+        // Check if player is grounded using IsTouchingLayers or Collider2D methods
+        isGrounded = playerCollider.IsTouchingLayers(groundLayer);
+
+        if (isGrounded && Input.GetButtonDown("Jump"))
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+        }
+    }
+
+}
